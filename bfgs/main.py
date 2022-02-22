@@ -40,10 +40,10 @@ def get_f(n):
     return [lambdify(X, f, "numpy") for f in ans]
 
 ## 関数を定義
-F0, G0, H0 = get_f(2)
+F0, G0 = get_f(1)
 F = lambda x:F0(x[0], x[1])
 G = lambda x:np.array(G0(x[0], x[1]), dtype=np.float64)
-H = lambda x:np.array(H0(x[0], x[1]), dtype=np.float64)
+hessinv = np.identity(2)
 
 ##### 最適化を実施 #####
 x = np.array(x0, dtype=np.float64)
@@ -51,8 +51,7 @@ for iter_num in range(max_iter_num):
     # 探索方向を決定
     f = F(x)
     grad = G(x)
-    hess = H(x)
-    d = LA.solve(hess, -grad)
+    d = -hessinv@grad
     
     # 停止条件を満たす場合終了する
     if d@d < eps*eps:
@@ -71,6 +70,14 @@ for iter_num in range(max_iter_num):
     
     # 更新し次のステップに進む
     x += d
+
+    # 近似ヘッセ行列の更新
+    s = d
+    y = G(x) - grad
+    ys = y@s
+    H = hessinv
+    dH = (np.c_[s]*y)@H + H@(np.c_[y]*s) + (1 + (y@H@y)/ys) * (s * np.c_[s])
+    hessinv = H + dH / ys
 
 print("===== result =====")
 print("iter_num: ", iter_num)

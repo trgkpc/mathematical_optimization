@@ -41,14 +41,14 @@ def get_f(n):
 ## 関数を定義
 F0, G0 = get_f(1)
 F = lambda x:F0(x[0], x[1])
-G = lambda x:G0(x[0], x[1])
+G = lambda x:np.array(G0(x[0], x[1]), dtype=np.float64)
 
 ##### 最適化を実施 #####
 x = np.array(x0, dtype=np.float64)
 for iter_num in range(max_iter_num):
     # 探索方向を決定
     f = F(x)
-    grad = np.array(G(x), dtype=np.float64)
+    grad = G(x)
     d = -grad
     
     # 停止条件を満たす場合終了する
