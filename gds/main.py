@@ -39,16 +39,16 @@ def get_f(n):
     return [lambdify(X, f, "numpy") for f in ans]
 
 ## 関数を定義
-F0, Grad0 = get_f(1)
+F0, G0 = get_f(1)
 F = lambda x:F0(x[0], x[1])
-Grad = lambda x:Grad0(x[0], x[1])
+G = lambda x:G0(x[0], x[1])
 
 ##### 最適化を実施 #####
 x = np.array(x0, dtype=np.float64)
 for iter_num in range(max_iter_num):
     # 探索方向を決定
     f = F(x)
-    grad = np.array(Grad(x), dtype=np.float64)
+    grad = np.array(G(x), dtype=np.float64)
     d = -grad
     
     # 停止条件を満たす場合終了する
@@ -57,7 +57,7 @@ for iter_num in range(max_iter_num):
     
     # 直線探索を行う
     for _ in range(inner_max_iter):
-        # アルミホ条件
+        # アルミホ条件を満たしたら直線探索を終了
         if F(x + d) <= f + armijo * (grad@d):
             break
         else:
