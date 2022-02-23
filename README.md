@@ -3,7 +3,7 @@
 
 # 線形計画(LP)
 - [単体法](simplex)
-    - $\text{maxmize} \; c^Tx \;\; \text{subject to} \; Ax = b,\; x \geq 0 $
+    - $$\text{maxmize} \; c^Tx \;\; \text{subject to} \; Ax = b,\; x \geq 0 $$
 
 # 非線形最適化
 - [最急降下法](gds)
