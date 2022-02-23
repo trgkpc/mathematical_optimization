@@ -46,6 +46,7 @@ G = lambda x:np.array(G0(x[0], x[1]), dtype=np.float64)
 hessinv = np.identity(2)
 
 ##### 最適化を実施 #####
+t0 = time.time()
 x = np.array(x0, dtype=np.float64)
 for iter_num in range(max_iter_num):
     # 探索方向を決定
@@ -76,11 +77,13 @@ for iter_num in range(max_iter_num):
     y = G(x) - grad
     ys = y@s
     H = hessinv
-    dH = (np.c_[s]*y)@H + H@(np.c_[y]*s) + (1 + (y@H@y)/ys) * (s * np.c_[s])
+    dH = np.c_[s]*(y@H) + (H@np.c_[y])*s + (1 + (y@H@y)/ys) * (s * np.c_[s])
     hessinv = H + dH / ys
 
+t = time.time() - t0
 print("===== result =====")
 print("iter_num: ", iter_num)
 print("x: ", x.tolist())
 print("f: ", F(x))
+print("t: ", t)
 
