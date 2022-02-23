@@ -4,6 +4,7 @@
 # 線形計画(LP)
 - [単体法](simplex)
 ![単体法で解く問題](simplex/prob.png)
+<img src="simplex/prob.png)">
 
 # 非線形最適化
 - [最急降下法](gds)
