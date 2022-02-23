@@ -4,15 +4,11 @@ import time
 
 ##### 設定 #####
 # 関数を定める
-
-
 def f_impl(x):
     x1, x2 = x
     return Rational(1, 2) * (x1**4) - 2 * (x1**2) * x2 + 4 * (x2**2) + 8 * x1 + 8 * x2
 
 ##### sympyを利用して導関数を計算 #####
-
-
 def get_f(n):
     X = np.array([Symbol(f"x{i+1}") for i in range(2)])
 
@@ -31,8 +27,6 @@ def get_f(n):
     return [lambdify(X, f, "numpy") for f in ans]
 
 ##### 最適化を行う関数 #####
-
-
 def optimize(F, G,
              x0=np.array([3, 1]),  # 初期解
              eps=1e-7,             # 停止条件
@@ -74,9 +68,12 @@ if __name__ == '__main__':
     def F(x): return F0(x[0], x[1])
     def G(x): return np.array(G0(x[0], x[1]), dtype=np.float64)
 
+    t0 = time.time()
     result = optimize(F, G)
+    t = time.time() - t0
     print("===== result =====")
     print("iter_num :", result["iter_num"])
     print("x        :", result["x"].tolist())
     print("f        :", result["f"])
+    print("t        :", t)
 
