@@ -7,6 +7,13 @@ import time
 def use_scipy(A, b):
     return lstsq(A, b)[0]
 
+# 後退代入により連立一次方程式を解く
+def TRsolve(A, b):
+    x = np.zeros(A.shape[1])
+    for i in range(n-1,-1,-1):
+        x[i] = (b[i] - A[i]@x) / A[i][i]
+    return x
+
 # 縦長ヘッセンベルグ行列について最小二乗解を求める
 def mylib(A, b):
     A = np.array(A)
@@ -19,13 +26,12 @@ def mylib(A, b):
         R = np.array([[cos, sin], [-sin, cos]])
         A[i:i+2] = R@A[i:i+2]
         b[i:i+2] = R@b[i:i+2]
-        
-    return lstsq(A, b)[0]
+    return TRsolve(A, b)
 
 if __name__ == '__main__':
     # ランダムな縦長ヘッセンベルグ行列を作る
     np.random.seed(0)
-    n = 300
+    n = 30
     A = 10*np.random.random((n+1, n))
     for i in range(2,n+1):
         A[i, :i-1] = np.zeros(i-1)
