@@ -1,0 +1,42 @@
+\documentclass{jarticle}
+\usepackage{amsmath,amssymb}
+\usepackage{bm}
+
+
+\begin{document}
+\section{QR分解に基づく擬似逆行列}
+縦長列フルランク行列$A\in \mathbb{R}^{n\times m}$が$A=QR$とQR分解されるとき、$A$の擬似逆行列$A^{+}$は
+\begin{align}
+A^{+} = R^{-1}Q^T
+\end{align}
+となる。このことを証明する。
+
+まず、一般に、行列$A$に対して以下の4式を満たす行列$A^{+}$はただ一つ存在し、
+この$A^{+}$がムーアペンローズの擬似逆行列であることが知られている。
+\begin{align}
+AA^{+}A = A
+\\
+A^{+}AA^{+} = A^{+}
+\\
+(AA^{+})^T = AA^{+}
+\\
+(A^{+}A)^T = A^{+}A
+\end{align}
+行列$B=R^{-1}Q^T$がこの式を満たすことを確認する。
+$Q^TQ$は単位行列$I$に等しいので、
+$BA=(R^{-1}Q^T)(QR)=I$であることがわかる。ゆえに、
+\begin{align}
+ABA = A(BA) = A
+\\
+BAB = (BA)B = B
+\\
+(BA)^T = I = BA
+\end{align}
+となる。
+さらに
+$AB=QRR^{-1}Q^T=QQ^T$は明らかに対称行列なので、
+\begin{align}
+(AB)^T = AB
+\end{align}
+以上より、$B$は$A$の擬似逆行列に等しい。
+\end{document}
