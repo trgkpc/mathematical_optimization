@@ -1,12 +1,13 @@
 import numpy as np
 import numpy.linalg as LA
+from scipy.linalg import lstsq
 import time
 import matplotlib.pyplot as plt
 
 np.random.seed(0)
 
 n = 300
-m = 10
+m = 300
 A = np.random.random((n,n))
 ans = np.random.random(n)
 b = A@ans
@@ -29,12 +30,18 @@ for k in range(m):
         w -= H[i][k] * V[i]
     H[k+1][k] = LA.norm(w)
 
-    # TODO これを解く
     e1 = np.zeros(k+2)
     e1[0] = r0norm
+    y = lstsq(H, e1)[0]
 
+    V = np.vstack((V, w / H[k+1][k]))
     if abs(H[k+1][k]) < eps:
         break
-    V = np.vstack((V, w / H[k+1][k]))
-V = V.T
+V = V[:-1].T
+
+x = V@y
+
+print(LA.norm(e1-H@y))
+print(LA.norm(b-A@x))
+
 
