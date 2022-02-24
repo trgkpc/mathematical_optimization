@@ -1,3 +1,9 @@
 *.swp
 .DS_Store
 __pycache__
+
+main.aux
+main.dvi
+main.log
+q.log
+
