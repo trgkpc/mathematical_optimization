@@ -2,9 +2,22 @@
 \usepackage{amsmath,amssymb}
 \usepackage{bm}
 
-
+\title{縦長ヘッセンベルグ行列による最小二乗問題の数値解法}
 \begin{document}
-\section{QR分解に基づく擬似逆行列}
+\section{一般の優決定系における最小二乗問題}
+縦長フルランク行列$A\in \mathbb{R}^{n\times m}$と行列$b\in\mathbb{R}^n$について、
+以下の最小二乗問題を解く。
+\begin{align}
+\underset{x}{\textrm{minimize}} \hspace{2em}
+\|Ax - b\|^2
+\end{align}
+この最適解は$A$の擬似逆行列$A^{+}$を用いて
+\begin{align}
+x = A^{+}b
+\end{align}
+である。
+
+\section{QR分解に基づく擬似逆行列の表現}
 縦長列フルランク行列$A\in \mathbb{R}^{n\times m}$が$A=QR$とQR分解されるとき、$A$の擬似逆行列$A^{+}$は
 \begin{align}
 A^{+} = R^{-1}Q^T
@@ -39,4 +52,77 @@ $AB=QRR^{-1}Q^T=QQ^T$は明らかに対称行列なので、
 (AB)^T = AB
 \end{align}
 以上より、$B$は$A$の擬似逆行列に等しい。
+
+\newpage
+\section{ヘッセンベルグ行列のQR分解}
+まず$A$が上三角行列であるときのQR分解は、
+直交行列$Q$として単位行列$I$、上三角行列$R$として$A$を取り
+次式のようにQR分解される：
+\begin{align}
+A = IA
+\end{align}
+\par
+次に、今回の主題である$A$がヘッセンベルグである場合を考える。
+ヘッセンベルグ行列とは上三角行列から一つだけ左下にはみ出た場合の行列であり、
+以下のような形で表される。
+ただし今回は縦長を仮定するので、$n=m+1$である。
+\begin{align}
+A = 
+\begin{bmatrix}
+a_{1,1} & a_{1,2} & \cdots & a_{1,m} \\
+a_{2,1} & a_{2,2} &        & \vdots  \\
+        & a_{3,2} & \ddots & \vdots  \\
+        &         & \ddots & \vdots  \\
+O       &         &        & a_{n,m} 
+\end{bmatrix}
+\end{align}
+\par
+このQR分解は、はみ出た余分な部分を右上に押し込む直交行列が取れれば実現できそうである。
+この"余分な部分を押し込む"ための直交変換として、
+次式で定義される
+ギブンス変換
+を用いることで高速に計算を行うことができる。
+\begin{align}
+G(a,b,\theta)_{i,j} = 
+\begin{cases}
+    \cos \theta     & (i,j) = (a,a), (b,b) \\
+    \sin \theta     & (i,j) = (a,b) \\
+    -\sin \theta    & (i,j) = (b,a) \\
+    1               & i=j \\
+    0               & \text{otherwise}
+\end{cases}
+\end{align}
+この行列を具体的に書き下すと以下のようになる。
+るので、$n=m+1$である。
+\begin{align}
+A =
+\begin{bmatrix}
+1       & \cdots    & 0             & \cdots    & 0             & \cdots    & 0         \\
+\vdots  & \ddots    & \vdots        &           & \vdots        &           & \vdots    \\
+0       & \cdots    & \cos \theta   & \cdots    & \sin \theta   & \cdots    & 0         \\
+\vdots  &           & \vdots        & \ddots    & \vdots        &           & \vdots    \\
+0       & \cdots    & {-}\sin \theta  & \cdots    & \cos \theta   & \cdots    & 0         \\
+\vdots  &           & \vdots        &           & \vdots        & \ddots    & \vdots    \\
+0       & \cdots    & 0             & \cdots    & 0             & \cdots    & 1         
+\end{bmatrix}
+\end{align}
+この行列は各列ベクトルの大きさが$1$であり、かつ列ベクトル同士は直交しているため
+直交行列である。
+\par
+ギブンス変換を用いた上三角化戦略の戦略を述べる。
+$2\times 2$行列と回転行列の積
+\begin{align}
+\begin{bmatrix}
+ \cos \theta    & \sin \theta \\
+-\sin \theta    & \cos \theta 
+\end{bmatrix}
+\begin{bmatrix}
+ a & b \\ c & d
+\end{bmatrix}
+\end{align}
+の左下成分は$-a\sin\theta+c\cos\theta$であり、
+\begin{align}
+\tan \theta = \frac{c}{a}
+\end{align}
+となる$\theta$を取れば上三角化できることがわかる。
 \end{document}
