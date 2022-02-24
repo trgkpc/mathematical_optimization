@@ -2,8 +2,10 @@
 \usepackage{amsmath,amssymb}
 \usepackage{bm}
 
-\title{縦長ヘッセンベルグ行列による最小二乗問題の数値解法}
+\title{縦長ヘッセンベルグ行列で定められる\\最小二乗問題の数値解法}
+\date{}
 \begin{document}
+\maketitle
 \section{一般の優決定系における最小二乗問題}
 縦長フルランク行列$A\in \mathbb{R}^{n\times m}$と行列$b\in\mathbb{R}^n$について、
 以下の最小二乗問題を解く。
@@ -122,7 +124,40 @@ $2\times 2$行列と回転行列の積
 \end{align}
 の左下成分は$-a\sin\theta+c\cos\theta$であり、
 \begin{align}
-\tan \theta = \frac{c}{a}
+\cos \theta = \frac{a}{\sqrt{a^2+c^2}}
+\\
+\sin \theta = \frac{c}{\sqrt{a^2+c^2}}
 \end{align}
 となる$\theta$を取れば上三角化できることがわかる。
+\footnote{
+    言うまでもないが、実際に$\theta$を求める必要などない
+}
+このギブンス変換を$(a,b)=(1,2),(2,3),...,(m,n)$までについて順番に繰り返せば良いのである。
+
+\section{一回冷静になる}
+最小二乗解は$A^{+}b$であり、$A^{+}$はQR分解を用いて具体的に$R^{-1}Q^T$と与えられる。したがって、
+求める解$x$は
+\begin{align}
+x = R^{-1}Q^Tb
+\end{align}
+であるらしい。
+ここで、右辺に$R^{-1}$となっていることに疑問を持ちたい。$R$は正則だから、
+\begin{align}
+Rx = Q^Tb
+\end{align}
+を解いてもいいはずである。
+この連立一次方程式は上三角行列$R$を係数行列とするから後退代入で簡単に解を求めることができる。
+\par
+一般に、アルゴリズムの設計において逆行列を用いるかというのは
+オーダーが大きく変わる深刻な問題であるので、実装前に一回冷静になることが大事である。
+\section{まとめ}
+\begin{enumerate}
+\item QR分解
+\begin{itemize}
+\item ヘッセンベルグ行列$A$にギブンス変換(特殊な直交変換)$G$を作用させる
+\item 同時に、$b$にこの逆変換を作用させる
+\end{itemize}
+\item 上三角行列を係数行列とする連立一次方程式$Rx=Q^Tb$を解く
+\item $x$を解として出力
+\end{enumerate}
 \end{document}
