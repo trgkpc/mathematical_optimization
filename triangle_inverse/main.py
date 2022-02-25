@@ -50,10 +50,12 @@ def run_solve(A, b):
 
 if __name__ == '__main__':
     np.random.seed(2)
-    n = 200
+    n = 1000
     A = 3 * np.random.random((n,n))
     for i in range(1,n):
         A[i,:i] = np.zeros(i)
+        while abs(A[i,i]) < 1e-1:
+            A[i, i] = 3 * np.random.random()
     b = np.random.random(n)
 
     #run_inv(A)

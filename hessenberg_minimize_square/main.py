@@ -15,6 +15,7 @@ def TRsolve(A, b):
     return x
 
 # 縦長ヘッセンベルグ行列について最小二乗解を求める
+# 最後にabs(b[-1])を計算すれば残差を計算することができる
 def mylib(A, b):
     A = np.array(A)
     b = np.array(b)
@@ -31,10 +32,12 @@ def mylib(A, b):
 if __name__ == '__main__':
     # ランダムな縦長ヘッセンベルグ行列を作る
     np.random.seed(0)
-    n = 30
-    A = 10*np.random.random((n+1, n))
+    n = 100
+    A = 3*np.random.random((n+1, n))
     for i in range(2,n+1):
         A[i, :i-1] = np.zeros(i-1)
+        while abs(A[i-1,i-2]) < 1e-1:
+            A[i-1, i-2] = 3 * np.random.random()
     # ランダムなベクトルを作る    
     b = np.random.random(n+1)
 
