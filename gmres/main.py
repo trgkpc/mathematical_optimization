@@ -36,6 +36,7 @@ def rawGMRES(A, b, x0, m):
 
 def TRsolve(A, b):
     x = np.zeros(A.shape[1])
+    n = A.shape[1]
     for i in range(n-1,-1,-1):
         x[i] = (b[i] - A[i]@x) / A[i][i]
     return x
@@ -54,7 +55,8 @@ def hessenberg_lstsq(A, b):
     return TRsolve(A, b)
 
 def GMRES(A, b, x0, m):
-    eps = 1e-10
+    eps1 = 1e-10
+    eps2 = 1e-13
 
     # 初期解について処理
     r0 = b - A@x0
@@ -65,12 +67,11 @@ def GMRES(A, b, x0, m):
     # V,Hを構成
     V = np.array([r0 / r0norm])
     H = np.zeros((1, 0))
-    e1 = np.array([r0norm])
+    error = r0norm
     for k in range(m):
         # H,eを拡大
         H = np.vstack((H, np.zeros(H.shape[-1]))).T
         H = np.vstack((H, np.zeros(H.shape[-1]))).T
-        e1 = np.append(e1,0.)
 
         # 次の基底を生成
         w = A@V[k]
@@ -81,22 +82,19 @@ def GMRES(A, b, x0, m):
         H[k+1][k] = h
         V = np.vstack((V, w / h))
         
-        # ギブンス変換により残差を見積もる
-        p = H[k][k]
-        q = h
-        r = np.sqrt(p**2 + q**2)
-        cos = p / r
-        sin = q / r
-        R = np.array([[cos, sin], [-sin, cos]])
-        e1[-2:] = R@e1[-2:]
+        # Hがランク落ちしている場合誤差0を達成出来るので打ち切って終了
+        if abs(h) < eps1:
+            break
 
-        # Hがランク落ちしている場合もしくはabs(e1[-1])が0の場合、誤差0を達成出来るので打ち切って終了
-        if abs(h) < eps or abs(e1[-1]) < eps:
+        # 誤差を計算し、十分小さい場合は打ち切って終了
+        sin = h / np.sqrt(H[k][k]**2 + h**2)
+        error *= abs(sin)
+        if error < eps2:
             break
         
     V = V[:-1].T
 
-    e1 = np.zeros(e1.shape)
+    e1 = np.zeros(H.shape[0])
     e1[0] = r0norm
     y = hessenberg_lstsq(H, e1)
 
@@ -107,8 +105,9 @@ if __name__ == '__main__':
     np.random.seed(0)
 
     n = 100
-    m = n
+    m = 80
     A = np.random.random((n, n))
+    A += 10*np.identity(n)
     ans = np.random.random(n)
     b = A@ans
 

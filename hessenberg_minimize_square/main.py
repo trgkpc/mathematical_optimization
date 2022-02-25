@@ -10,6 +10,7 @@ def use_scipy(A, b):
 # 後退代入により連立一次方程式を解く
 def TRsolve(A, b):
     x = np.zeros(A.shape[1])
+    n = A.shape[1]
     for i in range(n-1,-1,-1):
         x[i] = (b[i] - A[i]@x) / A[i][i]
     return x
