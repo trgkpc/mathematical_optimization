@@ -11,6 +11,7 @@
 - [最急降下法](gds)
 - [ニュートン法](newton)
 - [準ニュートン法(BFGS公式)](bfgs)
+- [Nelder-Mead法](nelder_mead)
 
 ## 数値線形代数
 - [GMRES法](gmres)
